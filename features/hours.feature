@@ -24,6 +24,5 @@ Feature: Hour Load System
 
   Scenario: Load Hours
     Given An hour system
-    When A worker enters the number of hours worked
+    When A worker enters the number_of_hours worked
     Then Link the number of hours to his/her profile
-    
