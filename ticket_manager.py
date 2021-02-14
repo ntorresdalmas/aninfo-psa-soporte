@@ -4,6 +4,9 @@ from project import Project
 import db
 
 
+ALLOWED_STATES = ['abierto', 'en progreso soporte', 'escalado en ingeneria', 'esperando respuesta del cliente', 'resuelto']
+ALLOWED_TICKET_TYPES = ['consulta', 'error']
+
 def create_ticket(content):
     #todo borrar este content cuando ya se reciba por parametro
     content = {

@@ -7,8 +7,6 @@ import json
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
-states = ['abierto', 'en progreso soporte', 'escalado en ingeneria', 'esperando respuesta del cliente', 'resuelto']
-ticket_types = ['consulta','error']
 
 @app.route('/', methods=['GET'])
 def home():
