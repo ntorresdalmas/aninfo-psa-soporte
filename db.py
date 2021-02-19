@@ -2,6 +2,11 @@ from datetime import datetime
 import psycopg2 as psql
 from contextlib import contextmanager
 
+USER = "luxhnaoyygruuj"
+HOST = "ec2-3-214-3-162.compute-1.amazonaws.com"
+NAME = "d3jjpk34lg7877"
+PORT = 5432
+PASS = "9c00d5c200886fa961548a9356bac54d8f8565a6838e7a8d237754828c0a75dd"
 
 
 @contextmanager
