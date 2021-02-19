@@ -22,21 +22,22 @@ def get_tickets(project_id):
     """
     only shows the ones with state != resuelto
     """
-    return ticket_manager.get_tickets_by_project(project_id)
+    return json.dumps(ticket_manager.get_tickets_by_project(project_id))
 
 
 @app.route('/<project_id>/createTicket', methods=['POST'])
 def create_ticket(project_id):
     content = request.json
     ticket_manager.create_ticket(content)
-    return 200
+    return {"status": 200,
+            "ticket_id": 1}
 
 
 @app.route('/<project_id>/editTicket', methods=['POST'])
 def edit_ticket(project_id):
     content = request.json
     ticket_manager.edit_ticket(content)
-    return 200
+    return {"status": 200}
 
 
 

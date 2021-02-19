@@ -1,43 +1,61 @@
 from datetime import datetime
+import psycopg2 as psql
+from contextlib import contextmanager
+
+
+
+@contextmanager
+def cursor(name=None):
+    with get_connection() as cn:
+        try:
+            yield cn.cursor(name=name) if name else cn.cursor()
+            # psycopg connections do not autocommit.
+            cn.commit()
+        except:
+            cn.rollback()
+
+
+def get_connection():
+    return psql.connect(user=USER, password=PASS, dbname=NAME, host=HOST, port=PORT)
 
 
 def save_ticket(data: dict):
-    #todo armar query
-    return
+    query = '''insert into tickets (ticket_id, project_id, resource_id, task_id, name, status, type, 
+                description,priority, creation_date, limit_date) VALUES (%(id)s, %(project_id)s, 
+                %(resource_id)s, %(task_id)s, %(name)s, %(status)s, %(type)s, %(description)s, 
+                %(priority)s, %(creation_date)s, %(limit_date)s)'''
+
+    with cursor() as cur:
+        cur.execute(query, data)
 
 
 def get_tickets_by_project(_id: int):
-    content = [{
-        'project_id': 1,
-        'client_id': 1,
-        'task_id': 1,
-        'resource_id': 1,
-        'id': 1,
-        'status': 'en progreso soporte',
-        'ticket_type': 'error',
-        'description': 'bla bla bla',
-        'priority': 3,
-        'created_date': datetime(2020, 1, 1),
-        'limit_date': datetime(2020, 1, 1)
-    }]
-    return content
+    query = f'select * from tickets where project_id = {_id}'
+    with cursor() as cur:
+        cur.execute(query)
+        rows = cur.fetchall()
+    return rows
+
 
 def get_ticket_by_id(_id: int):
-    #todo sacar este content y que sea una pegada trayendo de la db
-    content = {
-        'project_id': 1,
-        'client_id': 1,
-        'task_id': 1,
-        'resource_id': 1,
-        'id': 1,
-        'status': 'en progreso soporte',
-        'ticket_type': 'error',
-        'description': 'bla bla bla',
-        'priority': 3,
-        'created_date': datetime(2020, 1, 1),
-        'limit_date': datetime(2020, 1, 1)
-    }
-    return content
+    query = f'select * from tickets where ticket_id = {_id}'
+    with cursor() as cur:
+        cur.execute(query)
+        rows = cur.fetchall()
+    return rows[0]
+
 
 def get_projects():
-    return
+    query = """select * from projects"""
+    with cursor() as cur:
+        cur.execute(query)
+        rows = cur.fetchall()
+    return rows
+
+
+def edit_ticket(_id: str, data: dict):
+    query = 'UPDATE TICKETS SET '
+    query = query + " , ".join([f"{k} = %({k})s" for k, _ in data.items()])
+    query = query + f" WHERE ticket_id = {_id}"
+    with cursor() as cur:
+        cur.execute(query, data)
