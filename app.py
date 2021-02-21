@@ -40,6 +40,5 @@ def edit_ticket(project_id):
     return {"status": 200}
 
 
-
-
-app.run()
+if __name__ == "__main__":
+  app.run()
