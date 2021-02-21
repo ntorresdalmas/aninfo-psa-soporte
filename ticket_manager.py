@@ -16,6 +16,17 @@ def create_ticket(content):
 
 def edit_ticket(content):
     _id = content.pop('ticket_id', None)
+    #
+    #if ticket.priority:
+    #    content['limit_date'] = PRIORITY_AND_DAYS_TO_COMPLETE[ticket.priority] + ticket.creation_date
+    #
+    #if ticket.task_id:
+    #    # pegarle a la API de get_tareas y get_proyectos y obtener de la tarea el recurso_asignado y codigoProyecto
+    #    tareas = get_tareas()
+    #    tarea = tareas[ticket.task_id]
+    #    content['project_id'] = tarea.recursoAsignado
+    #    content['resource_id'] = tarea.codigoProyecto
+
     db.edit_ticket(_id, content)
 
 
@@ -31,5 +42,5 @@ def get_ticket_by_id(_id: int):
 
 def get_projects():
     projects_data = db.get_projects()
-    projects = [Project(**data) for data in projects_data]
+    projects = [Project(**data) for data in projects_data if data.estado != "finalizado"]
     return projects
