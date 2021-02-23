@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from datetime import datetime
-
 
 @dataclass
-class Project:
-    _id: int
+class Resource:
+    id: int
     name: str
+    lastname: str
