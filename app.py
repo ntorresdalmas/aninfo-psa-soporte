@@ -29,7 +29,7 @@ def get_all_tickets_main_data():
 
 @app.route('/ticket_data/<ticket_id>', methods=['GET'])
 @cross_origin()
-def get_all_tickets_main_data(ticket_id):
+def get_ticket_data(ticket_id):
     """
     Exclusive use for front app
     """
