@@ -42,7 +42,7 @@ def get_all_tickets():
     return json.dumps(ticket_manager.get_all_tickets())
 
 
-@app.route('/createTicket', methods=['POST'])
+@app.route('/create_ticket', methods=['POST'])
 @cross_origin()
 def create_ticket():
     content = request.json
@@ -52,7 +52,7 @@ def create_ticket():
             "ticket_id": 1}
 
 
-@app.route('/editTicket', methods=['POST'])
+@app.route('/edit_ticket', methods=['POST'])
 @cross_origin()
 def edit_ticket():
     content = request.json
