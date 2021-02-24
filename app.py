@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-from datetime import datetime
 from ticket import Ticket
 import ticket_manager
 import json
@@ -27,12 +26,13 @@ def get_all_tickets_main_data():
     return json.dumps(ticket_manager.get_all_tickets_main_data(filters))
 
 
-@app.route('/ticket_data/<ticket_id>', methods=['GET'])
+@app.route('/ticket_data', methods=['POST'])
 @cross_origin()
-def get_ticket_data(ticket_id):
+def get_ticket_data():
     """
     Exclusive use for front app
     """
+    ticket_id = request.json['ticket_id']
     return json.dumps(ticket_manager.get_ticket_data(ticket_id))
 
 
