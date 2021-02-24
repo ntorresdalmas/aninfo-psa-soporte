@@ -22,7 +22,7 @@ def create_ticket(content):
 def edit_ticket(content):
     _id = content.pop('ticket_id', None)
     if content['priority']:
-        content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[content['priority']]) + get_ticket_by_id(_id)['creation_date']
+        content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[content['priority']]) + get_ticket_by_id(_id)[0]['creation_date']
 
     db.edit_ticket(_id, content)
 
@@ -54,6 +54,7 @@ def get_all_tickets_main_data(filters):
                              if project["codigo"] == ticket["project_id"]]
 
         data.append({
+            "id": ticket["id"],
             "name": ticket["name"],
             "status": ticket["status"],
             "priority": ticket["priority"],
@@ -64,6 +65,40 @@ def get_all_tickets_main_data(filters):
     return data
 
 
+def get_ticket_data(_id: int):
+    ticket = get_ticket_by_id(_id)[0]
+
+    request = requests.get(f'http://proyectopsa.herokuapp.com/proyectos/{ticket["project_id"]}/tarea/{ticket["task_id"]}/')
+    if request.status_code != 200:
+        raise Exception("Problema al comunicarse con modulo proyectos")
+    task = request.json()
+
+    return {
+        "id": ticket["id"],
+        "name": ticket["name"],
+        "description": ticket["description"],
+        "status": ticket["status"],
+        "priority": ticket["priority"],
+        "type": ticket["type"],
+        "project name": task["nombreProyecto"],
+        "task name": task["nombre"],
+        "task description": task["descripcion"],
+        "creation date": ticket["creation_date"],
+        "limit date": ticket["limit_date"]
+    }
+
+
+def get_all_tasks():
+    project_request = requests.get('http://proyectopsa.herokuapp.com/proyectos/')
+    if project_request.status_code != 200:
+        raise Exception("Problema al comunicarse con modulo proyectos")
+    tasks = list()
+    for project in project_request.json():
+        task_request = requests.get(f'http://proyectopsa.herokuapp.com/proyectos/{project["codigo"]}/tarea')
+        if project_request.status_code != 200:
+            raise Exception("Problema al comunicarse con modulo proyectos")
+        tasks.append(task_request.json().tarea)
+    return tasks
 
 
 def get_ticket_by_id(_id: int):

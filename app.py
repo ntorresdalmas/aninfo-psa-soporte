@@ -27,6 +27,15 @@ def get_all_tickets_main_data():
     return json.dumps(ticket_manager.get_all_tickets_main_data(filters))
 
 
+@app.route('/ticket_data/<ticket_id>', methods=['GET'])
+@cross_origin()
+def get_all_tickets_main_data(ticket_id):
+    """
+    Exclusive use for front app
+    """
+    return json.dumps(ticket_manager.get_ticket_data(ticket_id))
+
+
 @app.route('/<project_id>/tickets', methods=['GET'])
 @cross_origin()
 def get_tickets(project_id):
