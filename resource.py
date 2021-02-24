@@ -2,6 +2,6 @@ from dataclasses import dataclass
 
 @dataclass
 class Resource:
-    id: int
+    legajo: int
     name: str
     lastname: str

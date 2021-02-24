@@ -11,6 +11,9 @@ PRIORITY_AND_DAYS_TO_COMPLETE = {1: 7, 2: 90, 3: 180, 4: 365}   #{prioridad: max
 
 
 def create_ticket(content):
+    """
+    Given a body we add 'creation_date', 'limit_date', 'status' fields and store them in the db.
+    """
     content['creation_date'] = datetime.now()
     content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[content['priority']]) + content['creation_date']
     content['status'] = 'abierto'
@@ -20,6 +23,9 @@ def create_ticket(content):
 
 
 def edit_ticket(content):
+    """
+    Given a body we add 'limit_date' if 'priority' has changed and store them in the db.
+    """
     _id = content.pop('ticket_id', None)
     if content['priority']:
         content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[content['priority']]) + get_ticket_by_id(_id)[0]['creation_date']
@@ -38,6 +44,10 @@ def get_all_tickets():
 
 
 def get_all_tickets_main_data(filters):
+    """
+    Given or not the following filters 'status', 'priority' and 'project_id' returns list of tickets with main data
+    :returns list of dictionaries { "id": , "name": , "status": , "priority": , "project name": , "limit date": }
+    """
     tickets = get_all_tickets()
     #TODO recibir como filtro el id del proyecto y no el nombre, para filtrar mas facil
     if filters:
@@ -66,6 +76,11 @@ def get_all_tickets_main_data(filters):
 
 
 def get_ticket_data(_id: int):
+    """
+    Given a ticket_id returns all related ticket data
+    :returns dictionary { "id": , "name": , "description": , "status": , "priority": , "type": , "project name": ,
+     "task name": , "task description" , "creation date": , "limit date": }
+    """
     ticket = get_ticket_by_id(_id)[0]
 
     request = requests.get(f'http://proyectopsa.herokuapp.com/proyectos/{ticket["project_id"]}/tarea/{ticket["task_id"]}')
@@ -91,6 +106,10 @@ def get_ticket_data(_id: int):
 
 
 def get_all_tasks():
+    """
+    Get all the task from all projects
+    :return: list of dictionarys: {'codigo': 8, 'estado': 'iniciado', 'nombre': 'agregar recursos'}
+    """
     project_request = requests.get('http://proyectopsa.herokuapp.com/proyectos/')
     if project_request.status_code != 200:
         raise Exception("Problema al comunicarse con modulo proyectos")
@@ -99,7 +118,7 @@ def get_all_tasks():
         task_request = requests.get(f'http://proyectopsa.herokuapp.com/proyectos/{project["codigo"]}/tarea')
         if project_request.status_code != 200:
             raise Exception("Problema al comunicarse con modulo proyectos")
-        tasks.append(task_request.json().tarea)
+        tasks.extend(task_request.json())
     return tasks
 
 

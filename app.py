@@ -1,5 +1,4 @@
-from flask import Flask, request, jsonify
-from ticket import Ticket
+from flask import Flask, request
 import ticket_manager
 import json
 
@@ -48,12 +47,26 @@ def get_tickets(project_id):
 @app.route('/tickets', methods=["GET"])
 @cross_origin()
 def get_all_tickets():
+    """
+    shows all the tickets
+    """
     return json.dumps(ticket_manager.get_all_tickets())
 
 
 @app.route('/create_ticket', methods=['POST'])
 @cross_origin()
 def create_ticket():
+    """
+    body:
+    {
+    "resource_id": int
+    "task_id": int
+    "name": str
+    "type": str
+    "description": str
+    "priority": int
+    }
+    """
     content = request.json
     print(content)
     ticket_manager.create_ticket(content)
@@ -64,6 +77,15 @@ def create_ticket():
 @app.route('/edit_ticket', methods=['POST'])
 @cross_origin()
 def edit_ticket():
+    """
+    body:
+    {
+    "resource_id": int
+    "status": str
+    "description": str
+    "priority": int
+    }
+    """
     content = request.json
     print(content)
     ticket_manager.edit_ticket(content)
