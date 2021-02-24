@@ -44,8 +44,9 @@ def get_all_tickets():
 def get_all_tickets_main_data(filters):
     tickets = get_all_tickets()
     #TODO recibir como filtro el id del proyecto y no el nombre, para filtrar mas facil
-    for k, v in filters.items():
-        tickets = [ticket for ticket in tickets if ticket[k] == v]
+    if filters:
+        for k, v in filters.items():
+            tickets = [ticket for ticket in tickets if ticket[k] == v]
     request = requests.get('http://proyectopsa.herokuapp.com/proyectos/')
     if request.status_code != 200:
         raise Exception("Problema al comunicarse con modulo proyectos")
