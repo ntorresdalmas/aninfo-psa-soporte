@@ -68,10 +68,12 @@ def get_all_tickets_main_data(filters):
 def get_ticket_data(_id: int):
     ticket = get_ticket_by_id(_id)[0]
 
-    request = requests.get(f'http://proyectopsa.herokuapp.com/proyectos/{ticket["project_id"]}/tarea/{ticket["task_id"]}/')
+    request = requests.get(f'http://proyectopsa.herokuapp.com/proyectos/{ticket["project_id"]}/tarea/{ticket["task_id"]}')
+
     if request.status_code != 200:
         raise Exception("Problema al comunicarse con modulo proyectos")
-    task = request.json()
+    task = request.json()['tarea']
+    print(task)
 
     return {
         "id": ticket["id"],
@@ -102,7 +104,7 @@ def get_all_tasks():
 
 
 def get_ticket_by_id(_id: int):
-    tickets = [Ticket(*row) for row in db.get_tickets_by_id(_id)]
+    tickets = [Ticket(*row) for row in db.get_ticket_by_id(_id)]
     return [ticket.as_dict() for ticket in tickets]
 
 

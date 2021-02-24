@@ -47,7 +47,7 @@ def get_ticket_by_id(_id: int):
     with cursor() as cur:
         cur.execute(query)
         rows = cur.fetchall()
-    return rows[0]
+    return rows
 
 
 def get_all_tickets():
