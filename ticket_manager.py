@@ -1,6 +1,7 @@
 from datetime import datetime
 from ticket import Ticket
 from project import Project
+import requests
 import db
 
 
@@ -33,6 +34,39 @@ def edit_ticket(content):
 def get_tickets_by_project(_id: int):
     tickets = [Ticket(*row) for row in db.get_tickets_by_project(_id)]
     return [ticket.as_dict() for ticket in tickets if ticket.status != "resuelto"]
+
+
+def get_all_tickets():
+    tickets = [Ticket(*row) for row in db.get_all_tickets()]
+    return [ticket.as_dict() for ticket in tickets if ticket.status != "resuelto"]
+
+
+def get_all_tickets_main_data(filters):
+    tickets = get_all_tickets()
+    #TODO recibir como filtro el id del proyecto y no el nombre, para filtrar mas facil
+    for k, v in filters.items():
+        tickets = [ticket for ticket in tickets if ticket[k] == v]
+    request = requests.get('http://proyectopsa.herokuapp.com/proyectos/')
+    if request.status_code != 200:
+        raise Exception("Problema al comunicarse con modulo proyectos")
+    projects = request.json()
+    data = []
+
+    for ticket in tickets:
+        project_name = [project["nombre"] for project in projects\
+                             if project["codigo"] == ticket["project_id"]]
+
+        data.append({
+            "name": ticket["name"],
+            "status": ticket["status"],
+            "priority": ticket["priority"],
+            "project name": project_name[0] if project_name else None,
+            "limit date": ticket["limit_date"]
+        })
+
+    return data
+
+
 
 
 def get_ticket_by_id(_id: int):

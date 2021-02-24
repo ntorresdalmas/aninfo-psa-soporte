@@ -50,6 +50,14 @@ def get_ticket_by_id(_id: int):
     return rows[0]
 
 
+def get_all_tickets():
+    query = """select * from tickets"""
+    with cursor() as cur:
+        cur.execute(query)
+        rows = cur.fetchall()
+    return rows
+
+
 def get_projects():
     query = """select * from projects"""
     with cursor() as cur:

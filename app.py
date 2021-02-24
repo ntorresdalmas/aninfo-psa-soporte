@@ -12,10 +12,15 @@ app.config["DEBUG"] = True
 def home():
     return "<h1>PSA - soporte</h1><p>Main Menu</p>"
 
-@app.route('/projects/', methods=['GET'])
-def get_projects():
-    proj_list = list()
-    return proj_list
+
+@app.route('/tickets_main_data', methods=['POST'])
+def get_all_tickets_main_data():
+    """
+    Exclusive use for front app
+    """
+    filters = request.json
+    return json.dumps(ticket_manager.get_all_tickets_main_data(filters))
+
 
 @app.route('/<project_id>/tickets', methods=['GET'])
 def get_tickets(project_id):
@@ -23,6 +28,11 @@ def get_tickets(project_id):
     only shows the ones with state != resuelto
     """
     return json.dumps(ticket_manager.get_tickets_by_project(project_id))
+
+
+@app.route('/tickets', methods=["GET"])
+def get_all_tickets():
+    return json.dumps(ticket_manager.get_all_tickets())
 
 
 @app.route('/<project_id>/createTicket', methods=['POST'])
