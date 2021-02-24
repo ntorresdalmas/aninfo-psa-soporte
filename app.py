@@ -42,19 +42,21 @@ def get_all_tickets():
     return json.dumps(ticket_manager.get_all_tickets())
 
 
-@app.route('/<project_id>/createTicket', methods=['POST'])
+@app.route('/createTicket', methods=['POST'])
 @cross_origin()
-def create_ticket(project_id):
+def create_ticket():
     content = request.json
+    print(content)
     ticket_manager.create_ticket(content)
     return {"status": 200,
             "ticket_id": 1}
 
 
-@app.route('/<project_id>/editTicket', methods=['POST'])
+@app.route('/editTicket', methods=['POST'])
 @cross_origin()
-def edit_ticket(project_id):
+def edit_ticket():
     content = request.json
+    print(content)
     ticket_manager.edit_ticket(content)
     return {"status": 200}
 
