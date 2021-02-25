@@ -88,7 +88,11 @@ def get_ticket_data(_id: int):
     if request.status_code != 200:
         raise Exception("Problema al comunicarse con modulo proyectos")
     task = request.json()['tarea']
-    print(task)
+
+    request = requests.get(f'https://squad6-backend.herokuapp.com/resources/{ticket["resource_id"]}')
+    if request.status_code != 200:
+        raise Exception("Problema al comunicarse con modulo proyectos")
+    resource = request.json()
 
     return {
         "id": ticket["id"],
@@ -100,6 +104,8 @@ def get_ticket_data(_id: int):
         "project name": task["nombreProyecto"],
         "task name": task["nombre"],
         "task description": task["descripcion"],
+        "resource id": resource["legajo"],
+        "resource name": f"{resource['Nombre']} {resource['Apellido']}",
         "creation date": ticket["creation_date"],
         "limit date": ticket["limit_date"]
     }
