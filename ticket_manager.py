@@ -17,8 +17,8 @@ def create_ticket(content):
     projects = get_projects()
     project_id = None
     for project in projects:
-        request = requests.get(f'http://proyectopsa.herokuapp.com/proyectos/{project["codigo"]}/tarea/{content["task_id"]}')
-        if 'tarea' in request.json():
+        request = requests.get(f'http://proyectopsa.herokuapp.com/proyectos/{project["codigo"]}/tarea/{content["task_id"]}').json()
+        if 'tarea' in request:
             project_id = project['codigo']
 
     content['creation_date'] = datetime.now()
@@ -114,6 +114,7 @@ def get_ticket_data(_id: int):
         "project name": task["nombreProyecto"],
         "task name": task["nombre"],
         "task description": task["descripcion"],
+        "task id": task["codigo"],
         "resource id": resource["legajo"],
         "resource name": f"{resource['Nombre']} {resource['Apellido']}",
         "creation date": ticket["creation_date"],
