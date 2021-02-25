@@ -12,12 +12,20 @@ PRIORITY_AND_DAYS_TO_COMPLETE = {1: 7, 2: 90, 3: 180, 4: 365}   #{prioridad: max
 
 def create_ticket(content):
     """
-    Given a body we add 'creation_date', 'limit_date', 'status' fields and store them in the db.
+    Given a body we add 'creation_date', 'limit_date', 'status' and 'project_id' fields and store them in the db.
     """
+    projects = get_projects()
+    project_id = None
+    for project in projects:
+        request = requests.get(f'http://proyectopsa.herokuapp.com/proyectos/{project["codigo"]}/tarea/{content["task_id"]}')
+        if 'tarea' in request:
+            project_id = project['codigo']
+
     content['creation_date'] = datetime.now()
-    content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[int(content['priority'])]) + content['creation_date']
+    content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[int(content['priority'])]) + content[
+        'creation_date']
+    content['project_id'] = project_id
     content['status'] = 'abierto'
-    #TODO: recibir project_id sacandolo del task desde el FE.
     ticket = Ticket(**content)
     db.save_ticket(vars(ticket))
 
@@ -35,11 +43,13 @@ def edit_ticket(content):
 
 def get_tickets_by_project(_id: int):
     tickets = [Ticket(*row) for row in db.get_tickets_by_project(_id)]
+    # TODO: preguntar si un ticket una vez que esta resuelto se sigue mostrando en el FRONT
     return [ticket.as_dict() for ticket in tickets if ticket.status != "resuelto"]
 
 
 def get_all_tickets():
     tickets = [Ticket(*row) for row in db.get_all_tickets()]
+    #TODO: preguntar si un ticket una vez que esta resuelto se sigue mostrando en el FRONT
     return [ticket.as_dict() for ticket in tickets if ticket.status != "resuelto"]
 
 
@@ -134,6 +144,8 @@ def get_ticket_by_id(_id: int):
 
 
 def get_projects():
-    projects_data = db.get_projects()
-    projects = [Project(**data) for data in projects_data if data.estado != "finalizado"]
-    return projects
+    project_request = requests.get('http://proyectopsa.herokuapp.com/proyectos/')
+    if project_request.status_code != 200:
+        raise Exception("Problema al comunicarse con modulo proyectos")
+
+    return list(filter(lambda x: x['estado'] != "finalizado", project_request.json()))

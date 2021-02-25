@@ -5,4 +5,5 @@ from datetime import datetime
 @dataclass
 class Project:
     _id: int
-    name: str
+    nombre: str
+    estado: str
