@@ -18,7 +18,7 @@ def create_ticket(content):
     project_id = None
     for project in projects:
         request = requests.get(f'http://proyectopsa.herokuapp.com/proyectos/{project["codigo"]}/tarea/{content["task_id"]}')
-        if 'tarea' in request:
+        if 'tarea' in request.json():
             project_id = project['codigo']
 
     content['creation_date'] = datetime.now()
