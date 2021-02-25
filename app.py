@@ -15,6 +15,15 @@ def home():
     return "<h1>PSA - soporte</h1><p>Main Menu</p>"
 
 
+@app.route('/tasks', methods=["GET"])
+@cross_origin()
+def get_all_tasks():
+    """
+    shows all the tasks from all projects
+    """
+    return json.dumps(ticket_manager.get_all_tasks())
+
+
 @app.route('/tickets_main_data', methods=['POST'])
 @cross_origin()
 def get_all_tickets_main_data():
