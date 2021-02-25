@@ -15,7 +15,7 @@ def create_ticket(content):
     Given a body we add 'creation_date', 'limit_date', 'status' fields and store them in the db.
     """
     content['creation_date'] = datetime.now()
-    content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[content['priority']]) + content['creation_date']
+    content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[int(content['priority'])]) + content['creation_date']
     content['status'] = 'abierto'
     #TODO: recibir project_id sacandolo del task desde el FE.
     ticket = Ticket(**content)
@@ -28,7 +28,7 @@ def edit_ticket(content):
     """
     _id = content.pop('ticket_id', None)
     if content['priority']:
-        content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[content['priority']]) + get_ticket_by_id(_id)[0]['creation_date']
+        content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[int(content['priority'])]) + get_ticket_by_id(_id)[0]['creation_date']
 
     db.edit_ticket(_id, content)
 
