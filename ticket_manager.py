@@ -28,7 +28,7 @@ def edit_ticket(content):
     """
     _id = content.pop('ticket_id', None)
     if content['priority']:
-        content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[int(content['priority'])]) + get_ticket_by_id(_id)[0]['creation_date']
+        content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[int(content['priority'])]) + datetime.strptime(get_ticket_by_id(_id)[0]['creation_date'], "%Y-%m-%d %H:%M:%S")
 
     db.edit_ticket(_id, content)
 
