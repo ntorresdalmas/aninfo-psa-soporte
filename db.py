@@ -25,21 +25,55 @@ def get_connection():
 
 
 def save_ticket(data: dict):
-    query = '''insert into tickets (ticket_id, project_id, resource_id, task_id, name, status, type, 
-                description,priority, creation_date, limit_date) VALUES (%(id)s, %(project_id)s, 
-                %(resource_id)s, %(task_id)s, %(name)s, %(status)s, %(type)s, %(description)s, 
+    query = '''insert into tickets (ticket_id, resource_id, name, status, type, 
+                description, priority, creation_date, limit_date) VALUES (%(id)s,
+                %(resource_id)s, %(name)s, %(status)s, %(type)s, %(description)s, 
                 %(priority)s, %(creation_date)s, %(limit_date)s)'''
 
     with cursor() as cur:
         cur.execute(query, data)
 
 
-def get_tickets_by_project(_id: int):
-    query = f'select * from tickets where project_id = {_id}'
+#def save_task(data: dict):
+#    query = '''insert into tasks (task_id, name, status, description)
+#                VALUES (%(id)s, %(name)s, %(status)s, %(description)s)'''
+#
+#    with cursor() as cur:
+#        cur.execute(query, data)
+
+
+def save_resolution(ticket_id, task_id, task_name):
+    #primero eliminar todas las resoluciones con el ticket id que me pasen.
+    query = f'delete into resolutions where ticket_id = {ticket_id}'
+    with cursor() as cur:
+        cur.execute(query)
+
+    query = f'insert into resolutions (ticket_id, task_id, task_name) VALUES ({ticket_id}, {task_id}, {task_name})'
+    with cursor() as cur:
+        cur.execute(query)
+
+
+def delete_resolution_by_task(_id: int):
+    query = f'delete into resolutions where task_id = {_id}'
+
+    with cursor() as cur:
+        cur.execute(query)
+
+
+def get_tasks_by_ticket_id(_id: int):
+    query = f'select * from resolutions where ticket_id = {_id}'
     with cursor() as cur:
         cur.execute(query)
         rows = cur.fetchall()
     return rows
+
+
+#def get_tickets_by_project(_id: int):
+#    query = f'select * from tickets where project_id = {_id}'
+#    with cursor() as cur:
+#        cur.execute(query)
+#        rows = cur.fetchall()
+#    return rows
 
 
 def get_ticket_by_id(_id: int):
@@ -51,19 +85,19 @@ def get_ticket_by_id(_id: int):
 
 
 def get_all_tickets():
-    query = """select * from tickets"""
+    query = 'select * from tickets'
     with cursor() as cur:
         cur.execute(query)
         rows = cur.fetchall()
     return rows
 
 
-def get_projects():
-    query = """select * from projects"""
-    with cursor() as cur:
-        cur.execute(query)
-        rows = cur.fetchall()
-    return rows
+#def get_projects():
+#    query = 'select * from projects'
+#    with cursor() as cur:
+#        cur.execute(query)
+#        rows = cur.fetchall()
+#    return rows
 
 
 def edit_ticket(_id: str, data: dict):

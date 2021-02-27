@@ -2,10 +2,7 @@ from dataclasses import dataclass
 
 @dataclass
 class Task:
-    code: str
+    code: int
+    name: str
     status: str
     description: str
-    assigned_resource: str
-    estimated_effort: int
-    real_effort: int
-

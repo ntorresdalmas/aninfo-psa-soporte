@@ -3,7 +3,7 @@
 CREATE TABLE IF NOT EXISTS projects (
     project_id INT NOT NULL,
     task_id INT NOT NULL,
-    name VARCHAR(32),
+    name VARCHAR(64),
     creation_date  TIMESTAMP,
     end_date TIMESTAMP,
     hours INT,
@@ -17,8 +17,8 @@ create table if not exists tickets (
 	project_id INT NOT null,
 	resource_id INT not null,
     task_id INT NOT null,
-	name VARCHAR(32),
-	status VARCHAR(20),
+	name VARCHAR(64),
+	status VARCHAR(32),
 	type VARCHAR(20),
 	description VARCHAR(140),
 	priority int ,
@@ -40,6 +40,12 @@ create table if not exists tasks (
 	primary key(task_id, resource_id)
 
 )
+
+create table if not exists resolutions (
+	ticket_id INT not null,
+    task_id INT NOT null,
+    task_name VARCHAR(64)
+    )
 
 
 create table if not exists resources(
