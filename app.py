@@ -1,7 +1,6 @@
 from flask import Flask, request
 import ticket_manager
 import json
-
 from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
@@ -22,6 +21,7 @@ def get_all_tasks():
     shows all the tasks from all projects
     """
     return json.dumps(ticket_manager.get_all_tasks())
+
 
 @app.route('/tasks_by_id', methods=["POST"])
 @cross_origin()
@@ -80,7 +80,6 @@ def create_ticket():
     body:
     {
     "resource_id": int
-    "task_id": int
     "name": str
     "type": str
     "description": str
@@ -109,6 +108,24 @@ def edit_ticket():
     content = request.json
     print(content)
     ticket_manager.edit_ticket(content)
+    return {"status": 200}
+
+
+@app.route('/edit_tasks_ticket', methods=['POST'])
+@cross_origin()
+def edit_tasks_ticket():
+    """
+    body:
+    {
+    "ticket_id": int,
+    "tasks" : [{
+    "task_id": int,
+    "task_name": str
+    }]
+    }
+    """
+    content = request.json
+    ticket_manager.edit_tasks_ticket(content)
     return {"status": 200}
 
 

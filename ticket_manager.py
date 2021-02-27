@@ -30,13 +30,26 @@ def edit_ticket(content):
     if content['priority']:
         content['limit_date'] = timedelta(days=PRIORITY_AND_DAYS_TO_COMPLETE[int(content['priority'])]) + \
                                 datetime.strptime(get_ticket_by_id(_id)[0]['creation_date'], "%Y-%m-%d %H:%M:%S.%f")
-
-    #TODO: task should be a list of dictionaries {'task_id' : 1.'task_name': 'tarea1'}
     db.edit_ticket(_id, content)
 
+
+def edit_tasks_ticket(content):
+    """
+    Given this body:
+    {
+    "ticket_id": int,
+    "tasks" : [{
+    "task_id": int,
+    "task_name": str
+    }]
+    }
+    the resolution table in db is up-to-date
+    """
+    _id = content.pop('ticket_id', None)
+
     #delete tasks related to tickets and create new matches between ticket & tasks
-    #for task in content['tasks']:
-    #   db.save_resolution({_id, task['task_id'], task['task_name'])
+    for task in content['tasks']:
+       db.save_resolution(_id, task['task_id'], task['task_name'])
 
 
 def get_tickets_by_project(_id: int):
@@ -81,16 +94,7 @@ def get_ticket_data(_id: int):
     if request.status_code != 200:
         raise Exception("Problema al comunicarse con modulo proyectos")
     resource = request.json()
-    tasks = []
-    """
-    all_tasks = get_all_tasks()
-    ticket_tasks = db.get_tasks_by_ticket_id(_id)
-    tasks = list()
-    for task_detail in all_tasks:
-        for task in ticket_tasks:
-            if task_detail['codigo'] == task['task_id']:
-                tasks.append({'codigo': task['task_id'], 'nombre': task_detail['nombre']})
-    """
+
     return {
         "id": ticket["id"],
         "name": ticket["name"],
@@ -98,7 +102,6 @@ def get_ticket_data(_id: int):
         "status": ticket["status"],
         "priority": ticket["priority"],
         "type": ticket["type"],
-        "tasks name": tasks,
         "resource id": resource["legajo"],
         "resource name": f"{resource['Nombre']} {resource['Apellido']}",
         "creation date": ticket["creation_date"],
@@ -118,7 +121,7 @@ def get_all_tasks():
         if task_request.status_code != 200:
             raise Exception("Problema al comunicarse con modulo proyectos")
         for task in task_request.json():
-            if task['estado'] != 'finalizado':  #TODO: preguntar estados de tarea!
+            if task['estado'].lower() != 'finalizado':
                 tasks.append(task)
             else:
                 db.delete_resolution_by_task(task['codigo'])

@@ -21,4 +21,3 @@ class Ticket:
         ticket_as_dict["creation_date"] = datetime.strftime(ticket_as_dict["creation_date"], "%Y-%m-%d %H:%M:%S")
         ticket_as_dict["limit_date"] = datetime.strftime(ticket_as_dict["limit_date"], "%Y-%m-%d %H:%M:%S")
         return ticket_as_dict
-
