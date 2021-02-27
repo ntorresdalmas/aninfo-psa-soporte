@@ -2,7 +2,9 @@ from dataclasses import dataclass
 
 @dataclass
 class Task:
-    code: int
+    ticket_id: int
+    task_id: int
     name: str
-    status: str
-    description: str
+
+    def as_dict(self):
+        return vars(self)

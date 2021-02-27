@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from ticket import Ticket
+from task import Task
 import requests
 import db
 
@@ -121,6 +122,11 @@ def get_all_tasks():
             else:
                 db.delete_resolution_by_task(task['codigo'])
     return tasks
+
+
+def get_tasks_from_ticket_id(_id):
+    tasks = [Task(*row) for row in db.get_tasks_by_ticket_id(_id)]
+    return [task.as_dict() for task in tasks]
 
 
 def get_ticket_by_id(_id: int):

@@ -23,6 +23,17 @@ def get_all_tasks():
     """
     return json.dumps(ticket_manager.get_all_tasks())
 
+@app.route('/tasks_by_id', methods=["POST"])
+@cross_origin()
+def get_tasks_by_id():
+    """
+    shows all the tasks from a ticket id
+    """
+
+    ticket_id = request.json['ticket_id']
+    return json.dumps(ticket_manager.get_tasks_from_ticket_id(ticket_id))
+
+
 
 @app.route('/tickets_main_data', methods=['POST'])
 @cross_origin()
