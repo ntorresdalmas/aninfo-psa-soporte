@@ -116,10 +116,10 @@ def get_all_tasks():
         if task_request.status_code != 200:
             raise Exception("Problema al comunicarse con modulo proyectos")
         for task in task_request.json():
-            if task.estado != 'finalizado':  #TODO: preguntar estados de tarea!
+            if task['estado'] != 'finalizado':  #TODO: preguntar estados de tarea!
                 tasks.append(task)
             else:
-                db.delete_resolution_by_task(task.codigo)
+                db.delete_resolution_by_task(task['codigo'])
     return tasks
 
 
