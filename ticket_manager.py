@@ -81,7 +81,8 @@ def get_ticket_data(_id: int):
     if request.status_code != 200:
         raise Exception("Problema al comunicarse con modulo proyectos")
     resource = request.json()
-
+    tasks = []
+    """
     all_tasks = get_all_tasks()
     ticket_tasks = db.get_tasks_by_ticket_id(_id)
     tasks = list()
@@ -89,7 +90,7 @@ def get_ticket_data(_id: int):
         for task in ticket_tasks:
             if task_detail['codigo'] == task['task_id']:
                 tasks.append({'codigo': task['task_id'], 'nombre': task_detail['nombre']})
-
+    """
     return {
         "id": ticket["id"],
         "name": ticket["name"],
