@@ -42,14 +42,16 @@ def save_ticket(data: dict):
 #        cur.execute(query, data)
 
 
-def save_resolution(ticket_id, task_id, task_name):
+def save_resolution(ticket_id, tasks):
     #primero eliminar todas las resoluciones con el ticket id que me pasen.
     query = f'delete into resolutions where ticket_id = {ticket_id}'
     with cursor() as cur:
         cur.execute(query)
 
-    query = f'insert into resolutions (ticket_id, task_id, task_name) VALUES ({ticket_id}, {task_id}, {task_name})'
     with cursor() as cur:
+        for task in tasks:
+            query = f'''insert into resolutions (ticket_id, task_id, task_name)
+                    VALUES ({ticket_id}, {task["task_id"]}, {task["task_name"]})'''
         cur.execute(query)
 
 

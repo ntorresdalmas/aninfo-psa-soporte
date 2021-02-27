@@ -48,8 +48,7 @@ def edit_tasks_ticket(content):
     _id = content.pop('ticket_id', None)
 
     #delete tasks related to tickets and create new matches between ticket & tasks
-    for task in content['tasks']:
-       db.save_resolution(_id, task['task_id'], task['task_name'])
+    db.save_resolution(_id, content['tasks'])
 
 
 def get_tickets_by_project(_id: int):
