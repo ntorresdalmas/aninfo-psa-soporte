@@ -18,7 +18,7 @@ create table if not exists tickets (
 	resource_id INT not null,
     task_id INT NOT null,
 	name VARCHAR(64),
-	status VARCHAR(32),
+	status VARCHAR(140),
 	type VARCHAR(20),
 	description VARCHAR(140),
 	priority int ,
