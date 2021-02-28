@@ -5,9 +5,7 @@ from datetime import datetime
 @dataclass
 class Ticket:
     id: int
-    project_id: int
     resource_id: int
-    task_id: int
     name: str
     status: str
     type: str

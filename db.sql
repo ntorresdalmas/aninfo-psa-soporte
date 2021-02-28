@@ -14,17 +14,15 @@ CREATE TABLE IF NOT EXISTS projects (
 
 create table if not exists tickets (
 	ticket_id int unique not null,
-	project_id INT NOT null,
 	resource_id INT not null,
-    task_id INT NOT null,
 	name VARCHAR(64),
 	status VARCHAR(140),
-	type VARCHAR(20),
+	type VARCHAR(64),
 	description VARCHAR(140),
 	priority int ,
 	creation_date timestamp,
 	limit_date timestamp,
-	primary key(ticket_id, project_id, resource_id, task_id)
+	primary key(ticket_id, resource_id)
     )
 -- 	CONSTRAINT fk_task_id FOREIGN KEY(task_id) REFERENCES tasks(task_id),
 -- 	CONSTRAINT fk_project_id FOREIGN KEY(project_id) REFERENCES projects(project_id)
