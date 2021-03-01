@@ -53,12 +53,12 @@ def edit_tasks_ticket(content):
 
 def get_tickets_by_project(_id: int):
     tickets = [Ticket(*row) for row in db.get_tickets_by_project(_id)]
-    return [ticket.as_dict() for ticket in tickets if ticket.status != "resuelto"]
+    return [ticket.as_dict() for ticket in tickets]
 
 
 def get_all_tickets():
     tickets = [Ticket(*row) for row in db.get_all_tickets()]
-    return [ticket.as_dict() for ticket in tickets if ticket.status != "resuelto"]
+    return [ticket.as_dict() for ticket in tickets]
 
 
 def get_all_tickets_main_data(filters):
